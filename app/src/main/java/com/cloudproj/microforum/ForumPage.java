@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 public class ForumPage extends AppCompatActivity {
 
+    //atggfd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,12 +23,6 @@ import com.google.android.gms.common.api.Status;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
-/**
- * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
- * profile.
- */
 public class SIgnInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -43,6 +38,7 @@ public class SIgnInActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
 
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
@@ -129,15 +125,16 @@ public class SIgnInActivity extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
-            String Id = acct.getId();
-            String email = acct.getEmail();
-            String name = acct.getDisplayName();
+            String userId = acct.getId();
+            String userEmail = acct.getEmail();
+            String userName = acct.getDisplayName();
 
-            User user = new User(name,email,Id);
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, (name + "\n" + email)));
-            updateUI(true);
+            User user = new User(userName,userEmail,userId);
+            mStatusTextView.setText(getString(R.string.signed_in_fmt, (userName + "\n" + userEmail)));
+//            updateUI(true);
 
-            //sendLogintoServer(user);
+            sendLogintoServer(user); // api call to check user.
+
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);
@@ -159,7 +156,7 @@ public class SIgnInActivity extends AppCompatActivity implements
                     @Override
                     public void onResult(Status status) {
                         // [START_EXCLUDE]
-                        updateUI(false);
+//                        updateUI(false);
                         // [END_EXCLUDE]
                     }
                 });
@@ -173,7 +170,7 @@ public class SIgnInActivity extends AppCompatActivity implements
                     @Override
                     public void onResult(Status status) {
                         // [START_EXCLUDE]
-                        updateUI(false);
+//                        updateUI(false);
                         // [END_EXCLUDE]
                     }
                 });
@@ -185,6 +182,7 @@ public class SIgnInActivity extends AppCompatActivity implements
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Toast.makeText(getBaseContext(),"Please Check Internet Connection", Toast.LENGTH_LONG).show();
     }
 
     private void showProgressDialog() {
@@ -232,19 +230,43 @@ public class SIgnInActivity extends AppCompatActivity implements
 
     private void sendLogintoServer(User user){
 
+        showProgressDialog();
         //Create JSON Object
         try {
             JSONObject json = new JSONObject();
             json.put("fname",user.fName.toString());
             json.put("lname",user.lName.toString());
-            json.put("id",user.ID);
+            json.put("id", user.ID);
             json.put("email", user.email);
 
             String result = sendtoServer(json.toString());
-            JSONObject jsonResult = new JSONObject(result);
-            if(jsonResult.get("response_code") == "0"){
-                Log.d("LocationUpdate","Location Updated" + result);
-            };
+            /* JSONObject jsonResult = new JSONObject(result);
+            if(jsonResult.get("response_code") == "200"){
+                Log.d("Checked","Response: " + result);
+                Intent intent = new Intent(this,MainActivity.class);
+                switch (jsonResult.get("status_flag").toString()){
+
+                    case "0": //created new User
+                        Toast.makeText(getBaseContext(),"Welcome to the WiseCracks", Toast.LENGTH_LONG).show();
+                        hideProgressDialog();
+                        startActivity(intent);
+                        break;
+                    case "1": //user already exists
+                        Toast.makeText(getBaseContext(),"Welcome Back", Toast.LENGTH_SHORT).show();
+                        hideProgressDialog();
+                        startActivity(intent);
+                        break;
+                }
+
+            }
+            else if(jsonResult.get("response_code") == "404"){
+                signOut(); //google signout
+            }
+*/
+            Intent intent = new Intent(this,MainActivity.class);
+            hideProgressDialog();
+            startActivity(intent);
+            finish();
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -255,5 +277,5 @@ public class SIgnInActivity extends AppCompatActivity implements
     private String sendtoServer(String msg){
         return "";
     }
-
+//http call return json response string
 }

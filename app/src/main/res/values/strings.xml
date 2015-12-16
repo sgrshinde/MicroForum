@@ -5,8 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-
     <string name="title_text">WiseCracks</string>
+
+    <string name="SharedPref">SharedPref</string>
+    <string name="SPUserName">UserName</string>
+    <string name="SPUserEmail">UserEmail</string>
+    <string name="SPUserID">UserID</string>
 
     <!-- Sign-in status messages -->
     <string name="signed_in_fmt">Signed in as: %s</string>
@@ -26,9 +30,30 @@
     <!-- Content Description for images -->
     <string name="desc_google_icon">Google Logo</string>
 
-
     <!-- Button labels -->
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
+    <string name="title_activity_teleport">Teleport</string>
+
+    <string name="forum_topic">title</string>
+    <string name="forum_latitude">latitude</string>
+    <string name="forum_longitude">longitude</string>
+    <string name="forum_radius">radius</string>
+    <string name="forum_AuthorID">authorId</string>
+    <string name="forum_question">description</string>
+
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_activity_newforum">Create New Forum</string>
+    <string name="title_activity_forumpage">Forum</string>
+
+
+    <string-array name="categories">
+        <item>Travel</item>
+        <item>Food</item>
+        <item>Restaurants</item>
+        <item>Study</item>
+        <item>Classes</item>
+    </string-array>
+
 
 </resources>
